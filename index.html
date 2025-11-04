@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازی فرماندهی فضایی | Amir 👑</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-container">
+        <!-- منوی اصلی -->
+        <div id="main-menu" class="screen">
+            <h1>⚔️ فرماندهی فضایی 👑</h1>
+            <button id="base-btn" class="menu-button">پایگاه 🏰</button>
+            <button id="attack-btn" class="menu-button">حمله 🚀</button>
+            <button id="produce-btn" class="menu-button">تولید نیرو ⚙️</button>
+            <button id="about-btn" class="menu-button">درباره سازنده ✍️</button>
+        </div>
+
+        <!-- صفحه پایگاه -->
+        <div id="base-screen" class="screen hidden">
+            <h2>پایگاه مرکزی 🏰</h2>
+            <div id="base-info">
+                <p>تعداد سرباز: <span id="soldier-count">0</span></p>
+                <p>تعداد تک‌تیرانداز: <span id="sniper-count">0</span></p>
+                <p>تعداد تانک: <span id="tank-count">0</span></p>
+            </div>
+            <button id="back-from-base" class="menu-button back-button">بازگشت</button>
+        </div>
+
+        <!-- صفحه حمله -->
+        <div id="attack-screen" class="screen hidden">
+            <h2>منطقه نبرد 🚀</h2>
+            <p>اینجا منطق نبرد نمایش داده خواهد شد.</p>
+            <button id="back-from-attack" class="menu-button back-button">بازگشت</button>
+        </div>
+
+        <!-- صفحه تولید نیرو -->
+        <div id="produce-screen" class="screen hidden">
+            <h2>تولید نیرو ⚙️</h2>
+
+            <div class="produce-unit">
+                <label>سرباز:</label>
+                <input type="number" id="soldier-input" min="0" value="0">
+                <span>⏱️ هر واحد: 1.5 ثانیه</span>
+            </div>
+
+            <div class="produce-unit">
+                <label>تک‌تیرانداز:</label>
+                <input type="number" id="sniper-input" min="0" value="0">
+                <span>⏱️ هر واحد: 3 ثانیه</span>
+            </div>
+
+            <div class="produce-unit">
+                <label>تانک:</label>
+                <input type="number" id="tank-input" min="0" value="0">
+                <span>⏱️ هر واحد: 6 ثانیه</span>
+            </div>
+
+            <p>زمان کل ساخت: <span id="total-time">0</span> ثانیه</p>
+
+            <button id="start-production" class="menu-button">شروع تولید 🚧</button>
+            <button id="back-from-produce" class="menu-button back-button">بازگشت</button>
+        </div>
+
+        <!-- صفحه درباره -->
+        <div id="about-screen" class="screen hidden">
+            <h2>درباره سازنده ✍️</h2>
+            <p>ساخته شده با عشق ❤️ توسط Amir 👑</p>
+            <button id="back-from-about" class="menu-button back-button">بازگشت</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
