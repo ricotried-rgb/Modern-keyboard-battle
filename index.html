@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>BINGO</title>
+  <style>
+/* 
+توجه: فرض شده فونت 'b titr' در سیستم کاربر نصب است. 
+اگر نیاز به لینک خارجی یا @font-face کامل بود، باید اضافه شود.
+*/
+body {
+background-color: #4e0101;
+color: #fff;
+font-family: 'b titr', Tahoma, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+flex-direction: column;
+overflow-y: auto; 
+}
+
+#menu {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 15px;
+}
+
+button {
+width: 120px;
+height: 45px;
+background-color: #000;
+color: #fff;
+border: 2px solid #78cf31;
+border-radius: 10px;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+button:hover {
+background-color: #78cf31;
+color: #000;
+}
+
+#countdown {
+font-size: 50px;
+font-weight: bold;
+margin-bottom: 20px;
+display: none;
+}
+
+#gameArea {
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 25px;
+}
+
+#buttonGrid {
+grid-template-columns: repeat(3, 120px); /* تغییر به 3 ستون */
+grid-template-rows: repeat(3, 45px); /* 9 دکمه در 3 سطر و 3 ستون */
+display: grid;
+gap: 15px;
+justify-content: center;
+align-content: center;
+}
+
+#randomBox {
+width: 150px;
+height: 150px;
+border: 4px solid #78cf31;
+border-radius: 15px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 48px;
+color: #78cf31;
+font-family: 'b titr', Tahoma, sans-serif;
+display: none;
+}
+
+.selected {
+background-color: #78cf31;
+color: #000;
+}
+
+#cancelBtn {
+width: 130px;
+height: 45px;
+background-color: #a10000;
+color: #fff;
+border: 2px solid #fff;
+border-radius: 10px;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+cursor: pointer;
+margin-top: 15px;
+}
+
+#cancelBtn:hover {
+background-color: #ff4444;
+color: #000;
+}
+
+/* ------------------------------ Modal Styles ------------------------------ */
+
+#settingsPage, #walletPage, #shopPage, #adminPage, #contactPage {
+display: none;
+flex-direction: column;
+align-items: center;
+max-width: 90%;
+min-width: 350px;
+text-align: center;
+gap: 15px;
+background-color: rgba(0,0,0,0.4);
+border-radius: 15px;
+padding: 20px;
+max-height: 90vh;
+overflow-y: auto;
+}
+
+/* 📞 صفحه ارتباطات - استایل جدید */
+#contactPage {
+border: 2px solid #fff; 
+}
+#contactPage .contact-link {
+width: 250px;
+height: 45px;
+background-color: #000;
+color: #fff;
+border: 2px solid #78cf31;
+border-radius: 10px;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+cursor: pointer;
+transition: 0.3s;
+display: flex;
+justify-content: center;
+align-items: center;
+text-decoration: none; /* برای لینک ها */
+}
+#contactPage .contact-link:hover {
+background-color: #78cf31;
+color: #000;
+}
+
+
+/* ✅ استایل دکمه کپی شماره کارت (ثابت) */
+.copy-card-btn {
+  width: 250px;
+  background-color: #4e0101; /* رنگ تیره برای دکمه صاحب بازی */
+  color: #fff;
+  border: 2px solid #ffdb99; /* خط مرزی طلایی */
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+.copy-card-btn:hover {
+  background-color: #ffdb99;
+  color: #4e0101;
+}
+.card-owner {
+  display: block;
+  color: #ffdb99;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+/* Toast پیام تأیید */
+.toast {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: rgba(78, 1, 1, 0.9); /* رنگ زمینه تیره با شفافیت */
+  color: #fff;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  transition: visibility 0s, opacity 0.4s ease;
+  opacity: 0;
+  font-family: 'b titr', Tahoma, sans-serif;
+}
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+/* ⚙️ صفحه تنظیمات */
+#settingsPage {
+border: 2px solid #78cf31;
+}
+#settingsPage input {
+width: 90%;
+height: 35px;
+border: 2px solid #78cf31;
+border-radius: 10px;
+text-align: center;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+outline: none;
+color: #000;
+}
+
+#settingsInfo {
+font-size: 13px;
+color: #ffdb99;
+direction: rtl;
+text-align: justify;
+}
+
+#saveSettings {
+width: 100px;
+height: 40px;
+background-color: #007a00;
+border: 2px solid #78cf31;
+border-radius: 10px;
+color: #fff;
+cursor: pointer;
+}
+
+#saveSettings:hover {
+background-color: #78cf31;
+color: #000;
+}
+
+/* 💰 صفحه کیف پول */
+#walletPage {
+border: 2px solid #ffdb99;
+}
+#balanceBox {
+width: 250px;
+height: 60px;
+border: 2px dashed #ffdb99;
+border-radius: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 20px;
+color: #ffdb99;
+margin-bottom: 10px;
+}
+
+#walletPage input {
+width: 90%;
+height: 35px;
+border: 2px solid #ffdb99;
+border-radius: 10px;
+text-align: center;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+outline: none;
+color: #000;
+margin-top: 10px;
+}
+
+#sellPrice {
+font-size: 14px;
+color: #78cf31;
+}
+
+#totalRialsDisplay {
+font-size: 18px;
+color: #fff;
+font-weight: bold;
+}
+
+#sellBtn {
+width: 100px;
+height: 40px;
+background-color: #a10000;
+border: 2px solid #fff;
+border-radius: 10px;
+color: #fff;
+cursor: pointer;
+}
+
+#sellBtn:hover {
+background-color: #ff4444;
+color: #000;
+}
+
+#backBtn, #walletBackBtn, #shopBackBtn, #adminBackBtn, #contactBackBtn {
+width: 100px;
+height: 40px;
+background-color: #950000;
+border: 2px solid #fff;
+border-radius: 10px;
+color: #fff;
+cursor: pointer;
+}
+
+#backBtn:hover, #walletBackBtn:hover, #shopBackBtn:hover, #adminBackBtn:hover, #contactBackBtn:hover {
+background-color: #ff4444;
+color: #000;
+}
+
+/* 🛍️ صفحه فروشگاه */
+#shopPage {
+border: 2px solid #78cf31;
+color: #fff;
+}
+
+#shopPage input {
+border: 2px solid #78cf31;
+}
+
+#buyPrice {
+font-size: 14px;
+color: #78cf31;
+}
+
+#totalBuyPriceDisplay {
+font-size: 18px;
+font-weight: bold;
+color: #fff;
+}
+
+#buyBtn {
+width: 100px;
+height: 40px;
+background-color: #007a00;
+border: 2px solid #78cf31;
+border-radius: 10px;
+color: #fff;
+cursor: pointer;
+}
+
+#buyBtn:hover {
+background-color: #78cf31;
+color: #000;
+}
+
+/* 👑 صفحه مدیریت - جدول گزارشات */
+#adminPage {
+border: 2px solid #fff;
+}
+
+#adminPassword {
+width: 90%;
+height: 35px;
+border: 2px solid #fff; 
+border-radius: 10px;
+text-align: center;
+font-family: 'b titr', Tahoma, sans-serif;
+font-size: 16px;
+outline: none;
+color: #000;
+margin-top: 10px;
+}
+
+#adminLoginBtn {
+width: 100px;
+height: 40px;
+background-color: #007a00;
+border: 2px solid #78cf31;
+border-radius: 10px;
+color: #fff;
+cursor: pointer;
+margin-top: 15px;
+}
+
+#reportArea {
+width: 100%;
+margin-top: 20px;
+direction: rtl;
+overflow-x: auto;
+}
+
+#reportArea h4 {
+color: #ffdb99;
+margin-bottom: 10px;
+}
+
+.report-table {
+width: 100%;
+border-collapse: collapse;
+min-width: 800px;
+font-size: 14px;
+}
+
+.report-table th, .report-table td {
+border: 1px solid #78cf31;
+padding: 8px;
+text-align: right;
+vertical-align: middle;
+}
+
+.report-table th {
+background-color: rgba(120, 207, 49, 0.2);
+color: #fff;
+}
+
+.report-table td button {
+width: 100px;
+height: 35px;
+font-size: 13px;
+transition: none;
+}
+
+/* دکمه تسویه (Sell Report) */
+.settle-btn {
+background-color: #a10000; 
+border: 1px solid #fff;
+}
+.settled {
+background-color: #007a00;
+border: 1px solid #78cf31;
+cursor: default;
+}
+
+/* دکمه رویت شد (Buy Report) */
+.review-btn {
+background-color: #ffdb99; 
+color: #000;
+border: 1px solid #000;
+}
+.reviewed {
+background-color: #007a00;
+border: 1px solid #78cf31;
+color: #fff;
+cursor: default;
+}
+  </style>
+</head>
+
+<body>
+  <!-- 🎮 منوی اصلی -->
+  <div id="menu">
+    <button id="startBtn">🎮 شروع بازی</button>
+    <button id="settings">⚙️ تنظیمات</button>
+    <button id="wallet">💰 کیف پول</button>
+    <button id="shopBtn">🛍️ فروشگاه</button>
+    <button id="contactBtn">📞 ارتباطات</button> 
+    <button id="admin">👑 مدیریت</button>
+  </div>
+
+  <div id="countdown"></div>
+
+  <!-- 🎲 بازی -->
+  <div id="gameArea">
+    <div id="buttonGrid"></div>
+    <div id="randomBox"></div>
+    <button id="cancelBtn">❌ انصراف</button>
+  </div>
+
+  <!-- ⚙️ صفحه تنظیمات -->
+  <div id="settingsPage">
+    <h3>تنظیمات کاربر 💾</h3>
+    <input type="text" id="fullname" placeholder="نام و نام خانوادگی" />
+    <p id="settingsInfo">
+      ⚠️ نام و نام خانوادگی که در این قسمت وارد می‌کنید باید با نام و نام خانوادگی کارت بانکی شما همخوانی داشته باشد.
+      این قسمت جهت واریز هدیه برای شماست و درصورت اشتباه وارد کردن اطلاعات، ادمین مسئولیتی در قبال خطای شما نخواهد داشت.
+    </p>
+    <input type="text" id="cardNumber" maxlength="16" placeholder="شماره کارت 16 رقمی" />
+    <button id="saveSettings">تأیید ✅</button>
+    <button id="backBtn">بازگشت 🔙</button>
+  </div>
+  
+  <!-- 💰 صفحه کیف پول -->
+  <div id="walletPage">
+    <h3>کیف پول 💰</h3>
+    <div id="balanceBox">
+      موجودی: <span id="currentBalance">10</span> سکه
+    </div>
+    <input type="number" id="sellAmount" placeholder="تعداد سکه برای فروش" min="1" />
+    <p id="sellPrice">قیمت هر 1 سکه: 1000 تومان</p>
+    <span id="totalRialsDisplay"></span>
+    <button id="sellBtn">فروش 💸</button>
+    <button id="walletBackBtn">بازگشت 🔙</button>
+  </div>
+
+  <!-- 🛍️ صفحه فروشگاه -->
+  <div id="shopPage">
+    <h3>فروشگاه 🛍️</h3>
+    <input type="number" id="buyAmount" placeholder="تعداد سکه برای خرید" min="1" />
+    <p id="buyPrice">قیمت هر 1 سکه: 1200 تومان</p>
+    <span id="totalBuyPriceDisplay"></span>
+    <button id="buyBtn">خرید 🛒</button>
+    <button id="shopBackBtn">بازگشت 🔙</button>
+  </div>
+  
+  <!-- 👑 صفحه مدیریت -->
+  <div id="adminPage">
+    <h3 id="adminTitle">ورود مدیریت 🔒</h3>
+    <div id="adminLoginForm" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+      <input type="password" id="adminPassword" maxlength="4" placeholder="رمز عبور ۴ رقمی" />
+      <button id="adminLoginBtn">ورود ✅</button>
+      <p id="adminAuthMessage" style="color: red; font-size: 14px; margin: 5px 0;"></p>
+    </div>
+    <div id="adminContent" style="display:none; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
+      <p style="color: #78cf31; font-size: 18px;">به پنل مدیریت خوش آمدید، امیر 👑!</p>
+      <button id="buyReportBtn" style="width: 200px; background-color: #007a00; border-color: #78cf31;">📈 گزارش خرید سکه</button>
+      <button id="sellReportBtn" style="width: 200px; background-color: #a10000; border-color: #fff;">📉 گزارش فروش سکه</button>
+      <div id="reportArea"></div>
+    </div>
+    <button id="adminBackBtn">بازگشت 🔙</button>
+  </div>
+
+  <!-- 📞 صفحه ارتباطات (با دکمه کپی کارت ثابت) -->
+  <div id="contactPage">
+    <h3>📞 ارتباطات</h3>
+    
+    <!-- لینک های ارتباطی قبلی -->
+    <a href="https://rubika.ir/IR_VBOOK" target="_blank" class="contact-link">خرید و فروش سکه</a>
+    <button id="channelContactBtn" class="contact-link" style="text-align: center; display: flex; justify-content: center; align-items: center;">کانال اطلاع رسانی</button>
+
+    <!-- ✅ قابلیت جدید: کپی شماره کارت ثابت صاحب بازی -->
+    <div class="contact-section">
+      <button id="copyCardBtn" class="copy-card-btn">📋 کپی شماره کارت</button>
+      <small class="card-owner">امیر دشتی</small>
+    </div>
+    
+    <button id="contactBackBtn">بازگشت 🔙</button>
+  </div>
+
+  <!-- Toast پیام تأیید (مخفی) -->
+  <div id="toast" class="toast"></div>
+
+
+  <script>
+// --- CONSTANTS ---
+const GAME_COST = 1;
+const WIN_REWARD = 10;
+const LOSS_PENALTY = 5;
+const CANCEL_PENALTY = 2; // جریمه انصراف بعد از شروع
+const SELL_PRICE = 1000;
+const BUY_PRICE = 1200; // نرخ خرید سکه
+const ADMIN_PASS = "1428"; // رمز مدیریت
+const OWNER_CARD_NUMBER = "6219861997529960"; // ✅ شماره کارت ثابت امیر دشتی
+
+// عناصر صفحه
+const settingsPage = document.getElementById("settingsPage");
+const walletPage = document.getElementById("walletPage");
+const shopPage = document.getElementById("shopPage");
+const adminPage = document.getElementById("adminPage");
+const contactPage = document.getElementById("contactPage");
+const menu = document.getElementById("menu");
+const gameArea = document.getElementById("gameArea");
+
+const currentBalanceSpan = document.getElementById("currentBalance");
+const fullnameInput = document.getElementById("fullname");
+const cardNumberInput = document.getElementById("cardNumber");
+const sellAmountInput = document.getElementById("sellAmount");
+const buyAmountInput = document.getElementById("buyAmount");
+
+const buttonGrid = document.getElementById("buttonGrid");
+const randomBox = document.getElementById("randomBox");
+const countdown = document.getElementById("countdown");
+
+const reportArea = document.getElementById("reportArea");
+const buyReportBtn = document.getElementById("buyReportBtn");
+const sellReportBtn = document.getElementById("sellReportBtn");
+
+let randomInterval;
+let readNumbers = [];
+let buttonNumbers = [];
+let isGameActive = false;
+let isCountdownOver = false;
+let clickConfirmTimer = null;
+let currentNumberToConfirm = null;
+let clickConfirmed = false;
+
+// --- مدیریت نمایش صفحات ---
+function hideAllPages() {
+  const pages = [settingsPage, walletPage, shopPage, adminPage, contactPage, gameArea, menu];
+  pages.forEach(page => page.style.display = "none");
+  reportArea.innerHTML = ""; 
+}
+
+function showMenu() {
+  hideAllPages();
+  menu.style.display = "flex";
+}
+
+// --- مدیریت موجودی سکه ---
+function loadBalance() {
+  let balance = localStorage.getItem("userBalance");
+  if (balance === null || isNaN(parseInt(balance))) {
+    balance = 10;
+    localStorage.setItem("userBalance", balance);
+  }
+  currentBalanceSpan.textContent = parseInt(balance);
+  return parseInt(balance);
+}
+
+function updateBalance(amount) {
+  const current = loadBalance();
+  const newBalance = current + amount;
+  localStorage.setItem("userBalance", newBalance);
+  currentBalanceSpan.textContent = newBalance;
+  return newBalance;
+}
+
+// بازگشت به منو و پاکسازی بازی
+function resetGameToMenu() {
+  clearInterval(randomInterval);
+  clearTimeout(clickConfirmTimer);
+
+  buttonGrid.innerHTML = "";
+  readNumbers = [];
+  buttonNumbers = [];
+  isGameActive = false;
+  isCountdownOver = false;
+  currentNumberToConfirm = null;
+  clickConfirmed = false;
+
+  gameArea.style.display = "none";
+  randomBox.style.display = "none";
+  countdown.style.display = "none";
+  showMenu();
+}
+
+// منطق باخت و برد
+function handleWin() {
+  updateBalance(WIN_REWARD);
+  alert(`🎉 تبریک می‌گوییم امیر! شما برنده شدید و ${WIN_REWARD} سکه به حساب شما اضافه شد.`);
+  resetGameToMenu();
+}
+
+function handleLoss(message) {
+  updateBalance(-LOSS_PENALTY);
+  alert(message || `😔 متأسفیم امیر! شما باختید و ${LOSS_PENALTY} سکه از حساب شما کسر شد.`);
+  resetGameToMenu();
+}
+
+function checkWinCondition() {
+  const buttons = buttonGrid.querySelectorAll("button");
+  let selectedCount = 0;
+  buttons.forEach(btn => {
+    if (btn.classList.contains("selected")) {
+      selectedCount++;
+    }
+  });
+  // در بازی ۹ دکمه داریم
+  if (selectedCount === 9) { 
+    clearInterval(randomInterval);
+    clearTimeout(clickConfirmTimer); 
+    handleWin();
+    return true;
+  }
+  return false;
+}
+
+// --- گزارشات ---
+
+function getCurrentDateTime() {
+  const now = new Date();
+  const date = now.toLocaleDateString('fa-IR');
+  const time = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return `${date} ساعت ${time}`;
+}
+
+function loadSellReports() {
+  return JSON.parse(localStorage.getItem("sellReports") || "[]");
+}
+
+function saveSellReports(reports) {
+  localStorage.setItem("sellReports", JSON.stringify(reports));
+}
+
+function renderSellReports() {
+  const reports = loadSellReports();
+  reportArea.innerHTML = '<h4>📉 گزارش کامل فروش سکه</h4>';
+  // ... (کد نمایش گزارش فروش) ...
+  if (reports.length === 0) {
+    reportArea.innerHTML += '<p style="color:#ffdb99;">گزارش فروشی وجود ندارد.</p>';
+    return;
+  }
+
+  let tableHTML = '<table class="report-table"><thead><tr>';
+  tableHTML += '<th>نام و نام خانوادگی</th><th>شماره کارت (کامل)</th><th>سکه فروخته شده</th><th>مبلغ واریزی (تومان)</th><th>تاریخ/ساعت</th><th>وضعیت</th>';
+  tableHTML += '</tr></thead><tbody>';
+
+  reports.forEach((report, index) => {
+    const settledClass = report.settled ? 'settled' : 'settle-btn';
+    const buttonText = report.settled ? '✔️ تسویه شد' : '💵 تسویه کن';
+    const disabled = report.settled ? 'disabled' : '';
+
+    tableHTML += `<tr><td>${report.fullName}</td><td>${report.cardNumber}</td><td>${report.coinsSold}</td><td>${report.totalRials.toLocaleString('fa-IR')}</td><td>${report.dateTime}</td><td><button id="settle-${index}" class="${settledClass}" ${disabled}>${buttonText}</button></td></tr>`;
+  });
+  tableHTML += '</tbody></table>';
+  reportArea.innerHTML += tableHTML;
+
+  reports.forEach((report, index) => {
+    const btn = document.getElementById(`settle-${index}`);
+    if (btn && !report.settled) {
+      btn.addEventListener('click', () => handleSettle(index));
+    }
+  });
+}
+
+function handleSettle(index) {
+  let reports = loadSellReports();
+  if (reports[index] && !reports[index].settled) {
+    reports[index].settled = true;
+    saveSellReports(reports);
+    renderSellReports();
+  }
+}
+
+function loadBuyReports() {
+  return JSON.parse(localStorage.getItem("buyReports") || "[]");
+}
+
+function saveBuyReports(reports) {
+  localStorage.setItem("buyReports", JSON.stringify(reports));
+}
+
+function renderBuyReports() {
+  const reports = loadBuyReports();
+  reportArea.innerHTML = '<h4>📈 گزارش کامل خرید سکه</h4>';
+  // ... (کد نمایش گزارش خرید) ...
+  if (reports.length === 0) {
+    reportArea.innerHTML += '<p style="color:#ffdb99;">گزارش خریدی وجود ندارد.</p>';
+    return;
+  }
+
+  let tableHTML = '<table class="report-table"><thead><tr>';
+  tableHTML += '<th>نام و نام خانوادگی</th><th>تعداد سکه خریده شده</th><th>مبلغ واریزی (تومان)</th><th>تاریخ/ساعت</th><th>وضعیت پرداخت</th>';
+  tableHTML += '</tr></thead><tbody>';
+
+  reports.forEach((report, index) => {
+    const reviewedClass = report.reviewed ? 'reviewed' : 'review-btn';
+    const buttonText = report.reviewed ? '✔️ تأیید شد' : '✅ رویت شد';
+    const disabled = report.reviewed ? 'disabled' : '';
+
+    tableHTML += `<tr><td>${report.fullName}</td><td>${report.coinsBought}</td><td>${report.totalRials.toLocaleString('fa-IR')}</td><td>${report.dateTime}</td><td><button id="review-${index}" class="${reviewedClass}" ${disabled}>${buttonText}</button></td></tr>`;
+  });
+
+  tableHTML += '</tbody></table>';
+  reportArea.innerHTML += tableHTML;
+
+  reports.forEach((report, index) => {
+    const btn = document.getElementById(`review-${index}`);
+    if (btn && !report.reviewed) {
+      btn.addEventListener('click', () => handleReview(index));
+    }
+  });
+}
+
+function handleReview(index) {
+  let reports = loadBuyReports();
+  if (reports[index] && !reports[index].reviewed) {
+    reports[index].reviewed = true;
+    saveBuyReports(reports);
+    renderBuyReports();
+  }
+}
+
+// --- Toast Function ---
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2500);
+}
+
+
+// --- رویدادها ---
+
+// 1. تنظیمات (Settings)
+document.getElementById("settings").addEventListener("click", () => {
+  hideAllPages();
+  settingsPage.style.display = "flex";
+  const savedName = localStorage.getItem("fullname");
+  const savedCard = localStorage.getItem("cardNumber");
+  if (savedName) fullnameInput.value = savedName;
+  if (savedCard) cardNumberInput.value = savedCard;
+});
+document.getElementById("backBtn").addEventListener("click", showMenu);
+document.getElementById("saveSettings").addEventListener("click", () => {
+  const name = fullnameInput.value.trim();
+  const card = cardNumberInput.value.trim();
+
+  if (!name) { alert("⚠️ لطفاً نام و نام خانوادگی خود را وارد کنید."); return; }
+  if (!card || !/^\d{16}$/.test(card)) { alert("⚠️ شماره کارت باید ۱۶ رقم باشد."); return; }
+
+  localStorage.setItem("fullname", name);
+  localStorage.setItem("cardNumber", card);
+  alert("✅ تنظیمات با موفقیت ذخیره شد.");
+});
+
+// 2. کیف پول (Wallet)
+document.getElementById("wallet").addEventListener("click", () => {
+  hideAllPages();
+  walletPage.style.display = "flex";
+  loadBalance();
+  sellAmountInput.value = "";
+  document.getElementById("totalRialsDisplay").textContent = "";
+});
+document.getElementById("walletBackBtn").addEventListener("click", showMenu);
+
+sellAmountInput.addEventListener("input", () => {
+  const sellAmount = parseInt(sellAmountInput.value);
+  if (isNaN(sellAmount) || sellAmount <= 0) { document.getElementById("totalRialsDisplay").textContent = ""; return; }
+  const totalRials = sellAmount * SELL_PRICE;
+  document.getElementById("totalRialsDisplay").textContent = `مبلغ کل: ${totalRials.toLocaleString('fa-IR')} تومان`;
+});
+
+document.getElementById("sellBtn").addEventListener("click", () => {
+  const balance = loadBalance();
+  const sellAmount = parseInt(sellAmountInput.value);
+  const cardNum = localStorage.getItem("cardNumber");
+  const fullName = localStorage.getItem("fullname");
+
+  if (!cardNum || !fullName) { alert("❌ ابتدا باید نام و شماره کارت خود را در قسمت تنظیمات ذخیره کنید!"); return; }
+  if (isNaN(sellAmount) || sellAmount <= 0) { alert("⚠️ لطفاً تعداد سکه معتبر برای فروش وارد کنید."); return; }
+  if (sellAmount > balance) { alert(`⛔ موجودی شما کافی نیست. موجودی فعلی: ${balance} سکه.`); return; }
+
+  const totalRials = sellAmount * SELL_PRICE;
+  const reports = loadSellReports();
+  reports.push({ fullName: fullName, cardNumber: cardNum, coinsSold: sellAmount, totalRials: totalRials, dateTime: getCurrentDateTime(), settled: false });
+  saveSellReports(reports);
+
+  updateBalance(-sellAmount);
+  sellAmountInput.value = "";
+  document.getElementById("totalRialsDisplay").textContent = "";
+
+  alert(`✅ ${sellAmount} سکه با موفقیت فروخته شد. مبلغ ${totalRials.toLocaleString('fa-IR')} تومان به‌زودی به کارت شما واریز خواهد شد.`);
+});
+
+// 3. فروشگاه (Shop)
+document.getElementById("shopBtn").addEventListener("click", () => {
+  hideAllPages();
+  shopPage.style.display = "flex";
+  buyAmountInput.value = "";
+  document.getElementById("totalBuyPriceDisplay").textContent = "";
+});
+document.getElementById("shopBackBtn").addEventListener("click", showMenu);
+
+buyAmountInput.addEventListener("input", () => {
+  const buyAmount = parseInt(buyAmountInput.value);
+  if (isNaN(buyAmount) || buyAmount <= 0) { document.getElementById("totalBuyPriceDisplay").textContent = ""; return; }
+  const totalPrice = buyAmount * BUY_PRICE;
+  document.getElementById("totalBuyPriceDisplay").textContent = `مبلغ کل: ${totalPrice.toLocaleString('fa-IR')} تومان`;
+});
+
+document.getElementById("buyBtn").addEventListener("click", () => {
+  const buyAmount = parseInt(buyAmountInput.value);
+  const fullName = localStorage.getItem("fullname");
+
+  if (!fullName) { alert("❌ ابتدا باید نام و نام خانوادگی خود را در قسمت تنظیمات ذخیره کنید!"); return; }
+  if (isNaN(buyAmount) || buyAmount <= 0) { alert("⚠️ لطفاً تعداد سکه معتبر برای خرید وارد کنید."); return; }
+
+  const totalPrice = buyAmount * BUY_PRICE;
+
+  const reports = loadBuyReports();
+  reports.push({ fullName: fullName, coinsBought: buyAmount, totalRials: totalPrice, dateTime: getCurrentDateTime(), reviewed: false });
+  saveBuyReports(reports);
+
+  updateBalance(buyAmount);
+  buyAmountInput.value = "";
+  document.getElementById("totalBuyPriceDisplay").textContent = "";
+
+  alert(`✅ ${buyAmount} سکه با موفقیت به موجودی شما اضافه شد. لطفاً مبلغ ${totalPrice.toLocaleString('fa-IR')} تومان را پرداخت کنید.`);
+});
+
+// 4. مدیریت (Admin)
+document.getElementById("admin").addEventListener("click", () => {
+  hideAllPages();
+  adminPage.style.display = "flex";
+  document.getElementById("adminTitle").textContent = "ورود مدیریت 🔒";
+  document.getElementById("adminPassword").value = '';
+  document.getElementById("adminAuthMessage").textContent = '';
+  document.getElementById("adminContent").style.display = 'none';
+  document.getElementById("adminLoginForm").style.display = 'flex';
+  reportArea.innerHTML = "";
+});
+document.getElementById("adminLoginBtn").addEventListener("click", () => {
+  const password = document.getElementById("adminPassword").value;
+  if (password === ADMIN_PASS) {
+    document.getElementById("adminAuthMessage").textContent = 'دسترسی مجاز';
+    document.getElementById("adminAuthMessage").style.color = 'green';
+    document.getElementById("adminLoginForm").style.display = 'none';
+    document.getElementById("adminContent").style.display = 'flex';
+    document.getElementById("adminTitle").textContent = "پنل مدیریت 👑";
+  } else {
+    document.getElementById("adminAuthMessage").textContent = 'دسترسی غیر مجاز';
+    document.getElementById("adminAuthMessage").style.color = 'red';
+  }
+});
+document.getElementById("adminBackBtn").addEventListener("click", showMenu);
+buyReportBtn.addEventListener("click", renderBuyReports);
+sellReportBtn.addEventListener("click", renderSellReports);
+
+// 5. ارتباطات (Contact)
+document.getElementById("contactBtn").addEventListener("click", () => {
+  hideAllPages();
+  contactPage.style.display = "flex";
+});
+
+// ✅ منطق کپی شماره کارت ثابت صاحب بازی
+document.getElementById("copyCardBtn").addEventListener("click", () => {
+  navigator.clipboard.writeText(OWNER_CARD_NUMBER).then(() => {
+    showToast("✅ شماره کارت کپی شد!");
+  });
+});
+
+// 🚀 اصلاح نهایی: ارجاع مستقیم به لینک روبه‌کا
+document.getElementById("channelContactBtn").addEventListener("click", () => {
+  window.open("https://rubika.ir/learn_bingo", "_blank");
+});
+
+document.getElementById("contactBackBtn").addEventListener("click", showMenu);
+
+
+// 6. بازی (Game Logic)
+document.getElementById("startBtn").addEventListener("click", () => {
+  const currentBalance = loadBalance();
+  if (currentBalance < GAME_COST) {
+    alert("❌ موجودی سکه شما برای خرید بلیط کافی نیست! (نیاز به حداقل ۱ سکه).");
+    return;
+  }
+
+  updateBalance(-GAME_COST);
+
+  isGameActive = true; 
+  isCountdownOver = false;
+
+  hideAllPages();
+  countdown.style.display = "block";
+  gameArea.style.display = "flex";
+  buttonGrid.innerHTML = "";
+
+  // ایجاد 9 دکمه
+  for (let i = 0; i < 9; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = "؟";
+    btn.disabled = true; 
+    buttonGrid.appendChild(btn);
+  }
+
+  let timeLeft = 5;
+  countdown.textContent = timeLeft;
+
+  const countdownInterval = setInterval(() => {
+    timeLeft--;
+    countdown.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(countdownInterval);
+      countdown.style.display = "none";
+      isCountdownOver = true; 
+      revealNumbers();
+      startRandomBox();
+    }
+  }, 1000);
+});
+
+function revealNumbers() {
+  const allNumbers = Array.from({ length: 99 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+  // 9 دکمه داریم
+  buttonNumbers = allNumbers.slice(0, 9); 
+
+  const buttons = buttonGrid.querySelectorAll("button");
+  buttons.forEach((btn, index) => {
+    const num = buttonNumbers[index];
+    btn.textContent = num;
+    btn.dataset.value = num;
+    btn.disabled = false;
+
+    const newBtn = btn.cloneNode(true);
+    newBtn.addEventListener("click", () => handleButtonClick(newBtn, num));
+    btn.replaceWith(newBtn);
+  });
+  randomBox.style.display = "none"; // نمایش رندوم باکس باید بعد از 5 ثانیه شروع شود
+}
+
+function startRandomBox() {
+  randomBox.style.display = "flex";
+  readNumbers = [];
+
+  const allNums = Array.from({length: 99},(_,i)=>i+1);
+  const remainingNumbers = allNums.sort(() => Math.random() - 0.5);
+
+  let currentIndex = 0;
+
+  function showNextNumber() {
+    if (!isGameActive) {
+      clearTimeout(clickConfirmTimer);
+      return;
+    }
+
+    // اگر همه اعداد رندوم تمام شد
+    if (currentIndex >= remainingNumbers.length) {
+      randomBox.textContent = "پایان 🎯";
+      clearTimeout(clickConfirmTimer);
+      if (!checkWinCondition()) {
+        handleLoss("😔 اعداد رندوم تمام شد و شما نتوانستید همه 9 عدد را ثبت کنید.");
+      }
+      return;
+    }
+
+    const num = remainingNumbers[currentIndex];
+    randomBox.textContent = num;
+    readNumbers.push(num);
+
+    currentNumberToConfirm = null;
+    clickConfirmed = false;
+    clearTimeout(clickConfirmTimer);
+
+    // بررسی اینکه آیا عدد در میان 9 دکمه است
+    if (buttonNumbers.includes(num)) {
+      currentNumberToConfirm = num;
+      clickConfirmed = false;
+
+      // تنظیم تایمر 10 ثانیه ای برای کلیک
+      clickConfirmTimer = setTimeout(() => {
+        if (!clickConfirmed) {
+          handleLoss(`⛔ بعلت ثبت نکردن شماره ${num} در طول 10 ثانیه، شما باختید.`);
+        }
+      }, 10000);
+    }
+
+    currentIndex++;
+
+    // تایمر 4 ثانیه برای نمایش عدد بعدی
+    setTimeout(showNextNumber, 4000);
+  }
+
+  showNextNumber();
+}
+
+function handleButtonClick(btn, num) {
+  if (btn.classList.contains("selected")) return;
+  if (!isGameActive) return;
+
+  if (readNumbers.includes(num)) {
+    btn.classList.add("selected");
+    // اگر عددی که کلیک شد، همان عدد تایمر دار بود
+    if (num === currentNumberToConfirm) {
+      clickConfirmed = true;
+      clearTimeout(clickConfirmTimer); 
+      currentNumberToConfirm = null;
+    }
+    checkWinCondition();
+  } else {
+    btn.style.borderColor = "#ff4444";
+    setTimeout(() => (btn.style.borderColor = "#78cf31"), 400);
+  }
+}
+
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  if (isGameActive && isCountdownOver) {
+    if (confirm(`آیا مطمئن هستید؟ با انصراف ${CANCEL_PENALTY} سکه جریمه بلیت می‌شوید.`)) {
+      updateBalance(-CANCEL_PENALTY);
+      alert(`⚠️ انصراف پس از شروع کامل بازی! ${CANCEL_PENALTY} سکه جریمه از موجودی شما کسر شد.`);
+    } else {
+      return;
+    }
+  }
+  resetGameToMenu();
+});
+
+
+// Initial Load
+document.addEventListener('DOMContentLoaded', () => {
+  loadBalance();
+  showMenu();
+});
+  </script>
+</body>
+</html>
