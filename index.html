@@ -1,78 +1,0 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Keyboard Battle - Amir's Strategy Game</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="game-container">
-        <!-- Main Menu -->
-        <div id="main-menu" class="screen active">
-            <h1>نبرد صفحه کلید مدرن 🚀</h1>
-            <button onclick="showScreen('base-screen')">پایگاه</button>
-            <button onclick="showScreen('attack-screen')">حمله</button>
-            <button onclick="showScreen('about-screen')">درباره سازنده</button>
-        </div>
-
-        <!-- Base -->
-        <div id="base-screen" class="screen">
-            <h2>پایگاه مرکزی 🔥</h2>
-            <p id="player-info"></p>
-            <p>موجودی فعلی نیروها:</p>
-            <ul>
-                <li>سرباز: <span id="soldier-count">2</span></li>
-                <li>تک‌تیرانداز: <span id="sniper-count">2</span></li>
-                <li>تانک: <span id="tank-count">2</span></li>
-            </ul>
-            <button onclick="showScreen('produce-screen')">تولید نیرو</button>
-            <button onclick="showScreen('main-menu')">بازگشت</button>
-        </div>
-
-        <!-- Produce -->
-        <div id="produce-screen" class="screen">
-            <h2>تولید نیرو</h2>
-            <div class="unit-production">
-                <h3>سرباز</h3>
-                <p>زمان ساخت: ۱.۵ ثانیه</p>
-                <label>تعداد:</label>
-                <input type="number" id="soldier-qty" value="1" min="1">
-                <button onclick="startProduction('soldier')" id="produce-soldier-btn">شروع تولید</button>
-            </div><hr>
-            <div class="unit-production">
-                <h3>تک‌تیرانداز</h3>
-                <p>زمان ساخت: ۳ ثانیه</p>
-                <label>تعداد:</label>
-                <input type="number" id="sniper-qty" value="1" min="1">
-                <button onclick="startProduction('sniper')" id="produce-sniper-btn">شروع تولید</button>
-            </div><hr>
-            <div class="unit-production">
-                <h3>تانک</h3>
-                <p>زمان ساخت: ۶ ثانیه</p>
-                <label>تعداد:</label>
-                <input type="number" id="tank-qty" value="1" min="1">
-                <button onclick="startProduction('tank')" id="produce-tank-btn">شروع تولید</button>
-            </div>
-
-            <div id="production-status"></div>
-            <button onclick="showScreen('base-screen')">بازگشت به پایگاه</button>
-        </div>
-
-        <!-- Attack -->
-        <div id="attack-screen" class="screen">
-            <h2>صفحه‌ی حمله</h2>
-            <p>درحال توسعه...</p>
-            <button onclick="showScreen('main-menu')">بازگشت</button>
-        </div>
-
-        <!-- About -->
-        <div id="about-screen" class="screen">
-            <h2>درباره سازنده</h2>
-            <p>توسعه داده شده توسط امیر 👑</p>
-            <button onclick="showScreen('main-menu')">بازگشت</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
